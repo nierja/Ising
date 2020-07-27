@@ -175,20 +175,6 @@ class mrizka:
         return
 
 
-    def graf_M_kroky(self, kroky, M):
-        """Vynese celkovou energii po sobě jdoucích MC kroků; E=E(krok)"""
-
-        plt.plot(kroky,M, "ro", color='black',
-             markersize=1)
-        plt.xlabel("\u03B2")
-        plt.ylabel("E(\u03B2)")
-        plt.title("E=E(\u03B2)")
-        plt.show()
-        plt.savefig("ising.pdf")
-        plt.close()
-        return
-
-
     def simulace(self):
         """Provede simulace pro různé teploty"""
 
