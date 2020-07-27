@@ -4,12 +4,11 @@ import matplotlib.pyplot as plt
 import statistics
 import math
 
-#nejhrubší nástřel
 
 class mrizka:
 
     def __init__(self):
-        """Vytvoří čtvercovou matici náhodných spinů"""
+        """Vytvoří čtvercovou matici náhodných spinů."""
 
         self.matice = np.ones((delkahrany, delkahrany))
         for a in range(delkahrany):
@@ -66,6 +65,43 @@ class mrizka:
         return zlomek_prijatych, prumerna_E, yerr, variance
 
 
+    def mereni_magnetizace(self, beta):
+        """Provede MC simulaci, při které měří celkovou magnetizaci"""
+
+        M = np.zeros(kroky_magnetizace)
+        M_celkova = 0
+
+        for a in range(delkahrany):                             #Spočte počáteční energii mřížky
+            for b in range(delkahrany):
+                M_celkova += self.matice[a, b]
+
+        for krok in range(kroky_magnetizace):
+            a = np.random.randint(0, delkahrany)
+            b = np.random.randint(0, delkahrany)
+            e0 = self.energie(a, b)
+
+            if np.exp((2*e0)*beta) > random.random():
+                if self.matice[a, b] == -1:
+                    M_celkova += 2
+                else:
+                    M_celkova -= 2
+
+                self.matice[a, b] *= -1
+
+            M[krok] = M_celkova
+
+        kroky = [i+1 for i in range(kroky_magnetizace)]
+        plt.figure()
+        plt.plot(kroky, M)
+        plt.xlabel("krok")
+        plt.ylabel("M")
+        plt.title("M=M(krok)")
+        plt.savefig("graf_M.pdf")
+        plt.show()
+        plt.close()
+        return
+
+
     def statistika(self, E, pocetkroku):
         """Statistické zpracování"""
 
@@ -118,7 +154,7 @@ class mrizka:
         plt.errorbar(beta,dE, yerr=yerr)
         plt.xlabel("\u03B2")
         plt.ylabel("dE/d\u03B2")
-        plt.title("C=dE/d\u03B2")
+        plt.title("C=(dE/d\u03B2)")
         plt.savefig("graf_dE_dbeta.pdf")
         plt.show()
         plt.close()
@@ -129,6 +165,20 @@ class mrizka:
         """Vynese celkovou energii po sobě jdoucích MC kroků; E=E(krok)"""
 
         plt.plot(kroky,E, "ro", color='black',
+             markersize=1)
+        plt.xlabel("\u03B2")
+        plt.ylabel("E(\u03B2)")
+        plt.title("E=E(\u03B2)")
+        plt.show()
+        plt.savefig("ising.pdf")
+        plt.close()
+        return
+
+
+    def graf_M_kroky(self, kroky, M):
+        """Vynese celkovou energii po sobě jdoucích MC kroků; E=E(krok)"""
+
+        plt.plot(kroky,M, "ro", color='black',
              markersize=1)
         plt.xlabel("\u03B2")
         plt.ylabel("E(\u03B2)")
@@ -155,7 +205,7 @@ class mrizka:
 
         for i in [x/100 for x in range(1, 101)]:
             prijate, prumer, yerr, variance = self.MC(i)
-            print("Krok č. {}: beta={}, \tE: {:.3f}, \tpřijatých: {:.3f} % , \tstd. error: {:.3f}"
+            print("Krok č. {}/100: beta={}, \tE: {:.3f}, \tpřijatých: {:.3f} % , \tstd. error: {:.3f}"
                   "".format(krok, i,prumer, prijate * 100, yerr))
 
             beta.append(i)
@@ -171,14 +221,17 @@ class mrizka:
         self.graf_dE_dbeta(C, beta, yerror)
 
 
-
-
 #---Konsanty-a-parametry-simulace---------------------------------------------------------------------------------------
-delkahrany = 5
+delkahrany = 8
 J = 1
-pocet_kroku = 30000
-ralaxacni_kroky = 30000
+pocet_kroku = 10000
+ralaxacni_kroky = 10000
+kroky_magnetizace = 300000
 
 
+#---Spuštění-simulace---------------------------------------------------------------------------------------------------
 mrizka = mrizka()
+print("Počáteční konfigurace mříky:")
+print(mrizka.matice)
+mrizka.mereni_magnetizace(0.45)
 mrizka.simulace()
