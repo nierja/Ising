@@ -59,7 +59,7 @@ class mrizka:
                 E_celkova += -4 * (e0)                          #update celkové energie mřížky
             E[krok] = E_celkova                                 #uložení energií jednolivých kroků, následně jde do fce. statistika()
 
-        prumerna_E, yerr, variance = self.statistika(E[ralaxacni_kroky:], pocet_kroku)
+        prumerna_E, yerr, variance = self.statistika(E[ralaxacni_kroky:], pocet_kroku) #Zanedbáváme počáteční kroky simulace
         zlomek_prijatych = pocet_prijatych / (pocet_kroku + ralaxacni_kroky)
 
         return zlomek_prijatych, prumerna_E, yerr, variance
@@ -95,7 +95,7 @@ class mrizka:
         plt.plot(kroky, M)
         plt.xlabel("krok")
         plt.ylabel("M")
-        plt.title("M=M(krok)")
+        plt.title("Změna celkové magnetizace: M=M(krok)")
         plt.savefig("graf_M.pdf")
         plt.show()
         plt.close()
@@ -189,7 +189,7 @@ class mrizka:
               "----------------------------------------------------------------------------------------------\n"
               "".format(delkahrany, delkahrany, J, pocet_kroku, ralaxacni_kroky))
 
-        for i in [x/100 for x in range(1, 101)]:
+        for i in [x/100 for x in range(1, 101)]:                    #pro tyto teploty provádíme simulace
             prijate, prumer, yerr, variance = self.MC(i)
             print("Krok č. {}/100: beta={}, \tE: {:.3f}, \tpřijatých: {:.3f} % , \tstd. error: {:.3f}"
                   "".format(krok, i,prumer, prijate * 100, yerr))
@@ -197,13 +197,13 @@ class mrizka:
             beta.append(i)
             yerror.append(yerr)
             prumerneE.append(prumer)
-            C.append(variance*(i**2))                   #počítá C = dE/dBeta = Var(E)*beta^2
+            C.append(variance*(i**2))                               #počítá C = dE/dBeta = Var(E)*beta^2
             krok += 1
 
         #print(beta)
         #print(prumerneE)
         #print(yerror)
-        self.graf_E_beta(beta, prumerneE, yerror)            #vynese požadované grafy
+        self.graf_E_beta(beta, prumerneE, yerror)                   #vynese požadované grafy
         self.graf_dE_dbeta(C, beta, yerror)
 
 
@@ -211,13 +211,13 @@ class mrizka:
 delkahrany = 8
 J = 1
 pocet_kroku = 10000
-ralaxacni_kroky = 10000
+ralaxacni_kroky = 10000                                             #počet kroků, po který systém relaxuje. Neprovádíme měření.
 kroky_magnetizace = 300000
 
 
 #---Spuštění-simulace---------------------------------------------------------------------------------------------------
 mrizka = mrizka()
-print("Počáteční konfigurace mříky:")
+print("Počáteční konfigurace mřížky:")
 print(mrizka.matice)
 mrizka.mereni_magnetizace(0.45)
 mrizka.simulace()
