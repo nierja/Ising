@@ -1,1 +1,1 @@
-Simulace vlastností magnetů pomocí Isingova modelu. Ovládání programu je popsáno v dokumentaci.
+Simulation of behaviour of magnetic materials vased on Ising model https://en.wikipedia.org/wiki/Ising_model. This implementation is able to determine overall magnetization and material's heat capacity as a function of temperature.
