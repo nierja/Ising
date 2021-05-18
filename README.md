@@ -1,1 +1,1 @@
-Simulation of behaviour of magnetic materials vased on Ising model https://en.wikipedia.org/wiki/Ising_model. This implementation is able to determine overall magnetization and material's heat capacity as a function of temperature.
+Simulation of behaviour of magnetic materials based on Ising model https://en.wikipedia.org/wiki/Ising_model. This implementation is able to determine overall magnetization and material's heat capacity as a function of temperature.
